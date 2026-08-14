@@ -12,10 +12,34 @@
 
 [licence]: https://img.shields.io/badge/License-GPLv3-blue.svg
 [licence-url]: https://www.gnu.org/licenses/gpl-3.0
-[version]: https://img.shields.io/github/v/release/noisetorch/NoiseTorch?label=Latest&style=flat
-[version-url]: https://github.com/noisetorch/NoiseTorch/releases
-[stars-shield]: https://img.shields.io/github/stars/noisetorch/NoiseTorch?maxAge=2592000
-[stars-url]: https://github.com/noisetorch/NoiseTorch/stargazers/
+[version]: https://img.shields.io/github/v/release/Fabian2000/NoiseTorch?label=Latest&style=flat
+[version-url]: https://github.com/Fabian2000/NoiseTorch/releases
+[stars-shield]: https://img.shields.io/github/stars/Fabian2000/NoiseTorch?maxAge=2592000
+[stars-url]: https://github.com/Fabian2000/NoiseTorch/stargazers/
+
+> ### About this fork
+>
+> Upstream NoiseTorch has been unmaintained since 2022 and its last release,
+> v0.12.2, is **broken on PipeWire 1.6 and newer**: the microphone list stays
+> empty and the filter refuses to load. This fork fixes that.
+>
+> * **Empty device list.** PipeWire encodes the active port name of a portless
+>   source as an empty string where PulseAudio sends a null-string tag. The
+>   parser rejected that and discarded the *entire* source list, so every
+>   microphone disappeared. Fixed in
+>   [Fabian2000/pulseaudio](https://github.com/Fabian2000/pulseaudio), which
+>   this fork depends on.
+> * **Filter fails to load** with `No such entity`. PipeWire no longer accepts
+>   absolute LADSPA plugin paths and only looks plugins up by name, but
+>   NoiseTorch passed the absolute path of the plugin it extracts to `/tmp`.
+>   The plugin is now installed as `nt-filter.so` and referenced by name.
+>
+> Older PipeWire versions and plain PulseAudio keep working unchanged.
+>
+> Two further differences from upstream: releases are **not signed**, and the
+> **self-updater is disabled** — it is hardcoded to the upstream repository and
+> would replace this build with the broken official release. Update by running
+> the installer again.
 
 NoiseTorch-ng is an easy to use open source application for Linux with PulseAudio or PipeWire. It creates a virtual microphone that suppresses noise in any application using [RNNoise](https://github.com/xiph/rnnoise). Use whichever conferencing or VOIP application you like and simply select the filtered Virtual Microphone as input to torch the sound of your mechanical keyboard, computer fans, trains and the likes.
 
@@ -53,40 +77,43 @@ Linux For Everyone has a good demo video [here](https://www.youtube.com/watch?v=
 
 ## Download & Install
 
-[Download the latest release from GitHub](https://github.com/noisetorch/NoiseTorch/releases).
+[Download the latest release from GitHub](https://github.com/Fabian2000/NoiseTorch/releases),
+unpack it and run the installer:
 
-Unpack the `tgz` file, into your home directory.
+    tar -xzf NoiseTorch_x64_v0.12.3.tgz
+    cd NoiseTorch_x64_v0.12.3
+    ./install.sh
 
-    tar -C $HOME -h -xzf NoiseTorch_x64_v0.12.2.tgz
+Linux on x86_64. The installer places the binary, desktop entry and icon under
+`~/.local`, and the RNNoise LADSPA plugin in a system LADSPA directory —
+PipeWire only finds plugins there, which is why this step **asks for your
+password once** (via `sudo`, falling back to `pkexec`).
 
-This will unpack the application, icon and desktop entry to the correct place.  
-Depending on your desktop environment you may need to wait for it to rescan for applications, or tell it to do a refresh now.
+To keep it entirely inside your home directory, point `LADSPA_PATH` at a
+writable directory instead; no password is then required, but that same
+`LADSPA_PATH` must also be visible to your PipeWire session:
 
-With gnome this can be done with:
+    LADSPA_PATH=$HOME/.ladspa ./install.sh
 
-    gtk-update-icon-cache
+On first start NoiseTorch asks for your password a second time, to grant itself
+`CAP_SYS_RESOURCE` — upstream behaves the same way. It needs this to raise its
+memlock limit.
 
-You now have a `noisetorch` binary and desktop entry on your system.
+If your desktop does not pick up the new entry right away, tell it to refresh;
+with GNOME that is `gtk-update-icon-cache`.
 
-Give it the required permissions with `setcap`:
+#### Update
 
-    sudo setcap 'CAP_SYS_RESOURCE=+ep' ~/.local/bin/noisetorch
-
-If NoiseTorch-ng doesn't start after installation, you may also have to make sure that `~/.local/bin` is in your PATH. On most distributions e.g. Ubuntu, this should be the case by default. If it's not, make sure to append
-
-```
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-```
-
-to your `~/.profile`. If you do already have that, you may have to log in and out for it to actually apply if this is the first time you're using `~/.local/bin`.
+This build has no self-updater. Download the newer release and run
+`./install.sh` again — it overwrites the previous installation. Close NoiseTorch
+first, otherwise the running instance keeps the old binary until you restart it.
 
 #### Uninstall
 
-    rm ~/.local/bin/noisetorch
-    rm ~/.local/share/applications/noisetorch.desktop
-    rm ~/.local/share/icons/hicolor/256x256/apps/noisetorch.png 
+    ./install.sh --uninstall
+
+Removes the binary, desktop entry, icon and the LADSPA plugin. Your
+configuration in `~/.config/noisetorch` is left untouched.
 
 ## Troubleshooting
 
@@ -125,19 +152,18 @@ Output filtering currently introduces something on the order of ~100ms with puls
 Install the Go compiler from [golang.org](https://golang.org/). And make sure you have a working C++ compiler.
 
 ```shell
- git clone https://github.com/noisetorch/NoiseTorch # Clone the repository
+ git clone https://github.com/Fabian2000/NoiseTorch # Clone the repository
  cd NoiseTorch # cd into the cloned repository
- make # build it
+ make release # build the release archive in bin/
 ```
 
-To install it:
+`make release` produces the same archive the GitHub release ships, including
+`install.sh`. Unpack it and run the installer as described above.
 
-```shell
-mkdir -p  ~/.local/bin
-cp ./bin/noisetorch ~/.local/bin/
-cp ./assets/noisetorch.desktop ~/.local/share/applications
-cp ./assets/icon/noisetorch.png ~/.local/share/icons/hicolor/256x256/apps
-```
+`make dev` builds a development binary into `bin/` instead. Note that it does
+not install the LADSPA plugin, so on PipeWire >= 1.6 you still need
+`nt-filter.so` (built by `make rnnoise` into `c/ladspa/rnnoise_ladspa.so`) in a
+LADSPA directory for the filter to load.
 
 ## Special thanks to
 
