@@ -82,8 +82,12 @@ Linux For Everyone has a good demo video [here](https://www.youtube.com/watch?v=
 
     curl -fsSL https://raw.githubusercontent.com/Fabian2000/NoiseTorch/master/get.sh | bash
 
-This downloads the latest release, verifies its checksum and runs the installer.
-Pin a specific version with `VERSION=v0.12.3` in front of the command.
+That's it. It downloads the latest release, checks that the download is intact
+and installs it.
+
+Want a specific version instead of the latest one?
+
+    curl -fsSL https://raw.githubusercontent.com/Fabian2000/NoiseTorch/master/get.sh | VERSION=v0.12.3 bash
 
 If you would rather look before you leap — reasonable, since this pipes a script
 straight into your shell — read [get.sh](get.sh), or skip it entirely and
