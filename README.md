@@ -80,8 +80,15 @@ Linux For Everyone has a good demo video [here](https://www.youtube.com/watch?v=
 
 ## Download & Install
 
-[Download the latest release from GitHub](https://github.com/Fabian2000/NoiseTorch/releases),
-unpack it and run the installer:
+    curl -fsSL https://raw.githubusercontent.com/Fabian2000/NoiseTorch/master/get.sh | bash
+
+This downloads the latest release, verifies its checksum and runs the installer.
+Pin a specific version with `VERSION=v0.12.3` in front of the command.
+
+If you would rather look before you leap — reasonable, since this pipes a script
+straight into your shell — read [get.sh](get.sh), or skip it entirely and
+[download the release](https://github.com/Fabian2000/NoiseTorch/releases)
+yourself:
 
     tar -xzf NoiseTorch_x64_v0.12.3.tgz
     cd NoiseTorch_x64_v0.12.3
@@ -107,9 +114,9 @@ with GNOME that is `gtk-update-icon-cache`.
 
 #### Update
 
-This build has no self-updater. Download the newer release and run
-`./install.sh` again — it overwrites the previous installation. Close NoiseTorch
-first, otherwise the running instance keeps the old binary until you restart it.
+This build has no self-updater. Run the one-liner again — it overwrites the
+previous installation. Close NoiseTorch first, otherwise the running instance
+keeps the old binary until you restart it.
 
 #### Uninstall
 

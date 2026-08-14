@@ -103,5 +103,6 @@ echo "  Start NoiseTorch from your application menu or run: noisetorch"
 echo "  On first start it asks for your password once, to grant itself"
 echo "  CAP_SYS_RESOURCE (needed to raise its memlock limit)."
 echo
-echo "  This build has no self-updater. To update, download the newer release"
-echo "  and run ./install.sh again. To remove it: ./install.sh --uninstall"
+echo "  This build has no self-updater. To update, run the installer again:"
+echo "    curl -fsSL https://raw.githubusercontent.com/Fabian2000/NoiseTorch/master/get.sh | bash"
+echo "  To remove it: ./install.sh --uninstall"
