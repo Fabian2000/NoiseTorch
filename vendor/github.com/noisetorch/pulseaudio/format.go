@@ -247,3 +247,22 @@ func bread(r io.Reader, data ...interface{}) error {
 	}
 	return nil
 }
+
+// breadOptionalString reads a string field that may be encoded either as a
+// null-string tag or as a regular (possibly empty) string. PipeWire's
+// PulseAudio emulation sends an empty stringTag where PulseAudio sends
+// stringNullTag, e.g. for the active port of a portless source.
+func breadOptionalString(r io.Reader, sptr *string) error {
+	var tt tagType
+	if err := binary.Read(r, binary.BigEndian, &tt); err != nil {
+		return err
+	}
+	if tt == stringNullTag {
+		*sptr = ""
+		return nil
+	}
+	if tt != stringTag {
+		return fmt.Errorf("Protcol error: Got type %s but expected %s or %s", tt, stringNullTag, stringTag)
+	}
+	return bread(r, sptr)
+}

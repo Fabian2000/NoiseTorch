@@ -4,6 +4,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"strings"
@@ -200,7 +201,7 @@ func loadPipeWireInput(ctx *ntcontext, inp *device) error {
 	idx, err := loadModule(ctx, "module-ladspa-source",
 		fmt.Sprintf("source_name='Filtered Microphone for %s' master=%s "+
 			"rate=48000 channels=1 "+
-			"label=nt-filter plugin=%s control=%d", inp.Name, inp.ID, ctx.librnnoise, ctx.config.Threshold))
+			"label=nt-filter plugin=%s control=%d", inp.Name, inp.ID, pipewireLadspaPlugin(ctx), ctx.config.Threshold))
 
 	if err != nil {
 		return err
@@ -214,7 +215,7 @@ func loadPipeWireOutput(ctx *ntcontext, out *device) error {
 	idx, err := loadModule(ctx, "module-ladspa-sink",
 		fmt.Sprintf("sink_name='Filtered Headphones' master=%s "+
 			"rate=48000 channels=1 "+
-			"label=nt-filter plugin=%s control=%d", out.ID, ctx.librnnoise, ctx.config.Threshold))
+			"label=nt-filter plugin=%s control=%d", out.ID, pipewireLadspaPlugin(ctx), ctx.config.Threshold))
 
 	if err != nil {
 		return err
@@ -452,4 +453,18 @@ func findModule(c *pulseaudio.Client, name string, argMatch string) (module puls
 	}
 
 	return pulseaudio.Module{}, false, nil
+}
+
+// pipewireLadspaPlugin returns the LADSPA plugin reference to hand to
+// PipeWire's module-ladspa-{source,sink}. Since PipeWire 1.6 the pulse
+// emulation no longer accepts absolute plugin paths and only searches the
+// LADSPA directories, so prefer a system-installed nt-filter.so by bare name
+// and fall back to the extracted temporary path on older servers.
+func pipewireLadspaPlugin(ctx *ntcontext) string {
+	for _, dir := range []string{"/usr/lib64/ladspa", "/usr/lib/ladspa"} {
+		if _, err := os.Stat(dir + "/nt-filter.so"); err == nil {
+			return "nt-filter"
+		}
+	}
+	return ctx.librnnoise
 }

@@ -97,7 +97,7 @@ github.com/golang/freetype/truetype
 ## explicit
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
-# github.com/noisetorch/pulseaudio v0.0.0-20220603053345-9303200c3861
+# github.com/noisetorch/pulseaudio v0.0.0-20220603053345-9303200c3861 => github.com/Fabian2000/pulseaudio v0.0.0-20260814221241-e015faacad6e
 ## explicit
 github.com/noisetorch/pulseaudio
 # github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635
@@ -148,3 +148,4 @@ golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal
 golang.org/x/text/encoding/internal/identifier
 golang.org/x/text/transform
+# github.com/noisetorch/pulseaudio => github.com/Fabian2000/pulseaudio v0.0.0-20260814221241-e015faacad6e

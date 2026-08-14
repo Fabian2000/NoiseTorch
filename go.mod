@@ -19,3 +19,5 @@ require (
 	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/mobile v0.0.0-20220104184238-4a8be17bd2e3 // indirect
 )
+
+replace github.com/noisetorch/pulseaudio => github.com/Fabian2000/pulseaudio v0.0.0-20260814221241-e015faacad6e

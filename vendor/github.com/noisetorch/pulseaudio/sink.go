@@ -63,7 +63,7 @@ func (s *Sink) ReadFrom(r io.Reader) (int64, error) {
 		}
 	}
 	if portCount == 0 {
-		err = bread(r, stringNullTag)
+		err = breadOptionalString(r, &s.ActivePortName)
 		if err != nil {
 			return 0, err
 		}
