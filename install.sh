@@ -80,7 +80,11 @@ info "Installing binary to $BIN_DIR/noisetorch"
 install -Dm755 "$SRC/noisetorch" "$BIN_DIR/noisetorch"
 
 info "Installing desktop entry and icon"
+# Point Exec at the absolute path: the desktop session's PATH does not
+# necessarily include ~/.local/bin, which would leave a launcher that silently
+# does nothing.
 install -Dm644 "$SRC/noisetorch.desktop" "$DESKTOP_DIR/noisetorch.desktop"
+sed -i "s|^Exec=noisetorch$|Exec=$BIN_DIR/noisetorch|" "$DESKTOP_DIR/noisetorch.desktop"
 install -Dm644 "$SRC/noisetorch.png" "$ICON_DIR/noisetorch.png"
 command -v update-desktop-database >/dev/null 2>&1 && \
 	update-desktop-database "$DESKTOP_DIR" >/dev/null 2>&1 || true
