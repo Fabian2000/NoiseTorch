@@ -45,19 +45,22 @@ NoiseTorch-ng is an easy to use open source application for Linux with PulseAudi
 
 Don't forget to leave a star ⭐ if this sounds useful to you! 
 
-## Regarding the recent security incident
+## ~~Regarding the recent security incident~~
 
-Due to a suspected security breach of the update server and code repository, there's
- been a concerted effort by the NoiseTorch community to ensure the source code and
- binaries are free from malicious code.
- 
- > No malicious code has been found.
- 
- You can read more about the audit that was done [here](https://github.com/noisetorch/NoiseTorch/discussions/275)
- and [here](https://github.com/noisetorch/NoiseTorch/discussions/264).
- Updates will now be retrieved from the project's releases page to avoid any risk
- of this reoccurring. We thank everyone for their trust and the love that they've
- shown towards the project in this unpleasant time. 
+*Kept from the upstream README for the record — this refers to the 2021 incident
+in the original project and does not concern this fork.*
+
+~~Due to a suspected security breach of the update server and code repository, there's
+been a concerted effort by the NoiseTorch community to ensure the source code and
+binaries are free from malicious code.~~
+
+> ~~No malicious code has been found.~~
+
+~~You can read more about the audit that was done [here](https://github.com/noisetorch/NoiseTorch/discussions/275)
+and [here](https://github.com/noisetorch/NoiseTorch/discussions/264).
+Updates will now be retrieved from the project's releases page to avoid any risk
+of this reoccurring. We thank everyone for their trust and the love that they've
+shown towards the project in this unpleasant time.~~
 
 ## Screenshot
 
